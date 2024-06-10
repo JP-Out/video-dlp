@@ -9,18 +9,18 @@
       "activeTab",
       "scripting"
     ],
+    "icons":{
+      "48": "images/DLP-logo (48px).png",
+      "96": "images/DLP-logo (96px).png",
+      "144": "images/DLP-logo (144px).png",
+      "240": "images/DLP-logo (240px).png"
+    },
     "action": {
       "default_popup": "src/popup/popup.html"
     },
     "background": {
       "service_worker": "src/background.js"
     },
-    "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["src/content.js"]
-      }
-    ],
     "web_accessible_resources": [
       {
         "resources": ["images/*.png"],
