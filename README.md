@@ -1,2 +1,3 @@
-# video-dlp
-A Google extension that downloads videos using yt-dlp and Python.
+## References
+
+This project uses [yt-dlp](https://github.com/yt-dlp/yt-dlp) to download videos.
