@@ -1,5 +1,3 @@
-## __Português__
-
 # Video Downloader Extension
 
 Este é um projeto de extensão do navegador que permite baixar vídeos do YouTube em diferentes resoluções.
@@ -33,7 +31,9 @@ Para mudar o local onde os vídeos são baixados, navegue até o arquivo app.py 
 'outtmpl': 'D:\\JP - User\\Videos\\Video Downloads\\%(title)s.%(ext)s'
 ```
 
-## __English__
+
+
+
 
 # Video Downloader Extension
 
