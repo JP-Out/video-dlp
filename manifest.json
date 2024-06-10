@@ -15,9 +15,6 @@
       "144": "images/DLP-logo (144px).png",
       "240": "images/DLP-logo (240px).png"
     },
-    "action": {
-      "default_popup": "src/popup/popup.html"
-    },
     "background": {
       "service_worker": "src/background.js"
     },
