@@ -1,4 +1,4 @@
-## Português
+## __Português__
 
 # Video Downloader Extension
 
@@ -25,8 +25,15 @@ Este é um projeto de extensão do navegador que permite baixar vídeos do YouTu
 
 Certifique-se de configurar corretamente o servidor Flask local antes de usar a extensão. O código-fonte do servidor Flask pode ser encontrado no diretório `server`.
 
+## Mudando o Local de Download
 
-## English
+Para mudar o local onde os vídeos são baixados, navegue até o arquivo app.py e altere a linha abaixo para o diretório desejado:
+
+```python
+'outtmpl': 'D:\\JP - User\\Videos\\Video Downloads\\%(title)s.%(ext)s'
+```
+
+## __English__
 
 # Video Downloader Extension
 
@@ -53,9 +60,13 @@ This is a browser extension project that allows downloading YouTube videos in di
 
 Make sure to properly configure the local Flask server before using the extension. The Flask server source code can be found in the `server` directory.
 
-## Contributing
+## Changing the Download Location
 
-Contributions are welcome! Feel free to submit pull requests or open issues if you encounter any problems or have suggestions for improvements.
+To change the location where the videos are downloaded, navigate to the app.py file and modify the line below to the desired directory:
+
+```python
+'outtmpl': 'D:\\JP - User\\Videos\\Video Downloads\\%(title)s.%(ext)s'
+```
 
 ## License
 
