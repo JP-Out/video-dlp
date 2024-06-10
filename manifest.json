@@ -1,33 +1,24 @@
 {
     "manifest_version": 3,
-    "name": "Minha Extensão",
+    "name": "Video-DLP",
     "version": "1.0",
     "description": "A Google extension that downloads videos using yt-dlp and Python.",
     "permissions": [
+      "contextMenus",
       "storage",
       "activeTab",
       "scripting"
     ],
     "action": {
-      "default_popup": "popup.html",
-      "default_icon": {
-        "16": "images/icon16.png",
-        "48": "images/icon48.png",
-        "128": "images/icon128.png"
-      }
+      "default_popup": "src/popup/popup.html"
     },
     "background": {
-      "service_worker": "background.js"
-    },
-    "icons": {
-      "16": "images/icon16.png",
-      "48": "images/icon48.png",
-      "128": "images/icon128.png"
+      "service_worker": "src/background.js"
     },
     "content_scripts": [
       {
         "matches": ["<all_urls>"],
-        "js": ["content.js"]
+        "js": ["src/content.js"]
       }
     ],
     "web_accessible_resources": [
