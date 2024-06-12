@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import yt_dlp
@@ -5,14 +6,26 @@ import yt_dlp
 app = Flask(__name__)
 CORS(app)
 
-progress_percent = 0
+progress_percent = '0'
+
+def get_progress(d):
+    global progress_percent
+    if d['status'] == 'finished':
+        file_tuple = os.path.split(os.path.abspath(d['filename']))
+        print("Done downloading {}".format(file_tuple[1]))
+    elif d['status'] == 'downloading':
+        p = d['_percent_str']
+        p = p.replace('%','')
+        progress_percent = str(p)
+        print(d['filename'], d['_percent_str'], d['_eta_str'])
 
 @app.route('/progress')
-def get_progress():
-    # Retorne a porcentagem de progresso
-    return jsonify({'percent': progress_percent})
-
-
+def progress():
+    global progress_percent
+    if (progress_percent != '0.0'):
+        return jsonify({'percent': progress_percent})
+    
+    
 @app.route('/download', methods=['POST'])
 def download_video():
     data = request.json
@@ -31,8 +44,10 @@ def download_video():
         }
         ydl_opts = {
             'format': resolution_map.get(resolution, 'best'),
-            'outtmpl': 'D:\\JP - User\\Videos\\Video Downloads\\%(title)s.%(ext)s',
+            # 'outtmpl': 'D:\\JP - User\\Videos\\Video Downloads\\%(title)s.%(ext)s',
+            'outtmpl': 'downloads/%(title)s.%(ext)s',
             'merge_output_format': 'mp4',
+            'progress_hooks': [get_progress],
             'ffmpeg_location': 'C:\\ffmpeg\\bin'
         }
         try:

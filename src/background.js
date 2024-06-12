@@ -19,7 +19,7 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     const resolutions = ['2160p', '1440p', '1080p', '720p', '480p', '360p', '240p', '144p'];
     const resolution = resolutions.find(res => info.menuItemId.endsWith(res));
-    
+
     if (resolution) {
         console.log(`Menu de contexto clicado para ${resolution}`);
         chrome.scripting.executeScript({

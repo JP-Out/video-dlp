@@ -3,6 +3,9 @@
     "name": "Video-DLP",
     "version": "1.0",
     "description": "A Google extension that downloads videos using yt-dlp and Python.",
+    "action": {
+      "default_popup": "src/popup/popup.html"
+    },
     "permissions": [
       "contextMenus",
       "storage",

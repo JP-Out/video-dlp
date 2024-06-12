@@ -18,6 +18,15 @@ Este é um projeto de extensão do navegador que permite baixar vídeos do YouTu
 
 - **Python**: Certifique-se de ter o Python instalado no seu sistema.
 - **FFmpeg**: O projeto requer o FFmpeg para mesclar os formatos de vídeo e áudio. Certifique-se de ter o FFmpeg instalado e configurado corretamente.
+- **Flask e Flask CORS**: Para usar a extensão e necessario instalar o Flask e o CORS:
+```
+pip install Flask
+```
+
+```
+pip install Flask-Cors
+```
+
 
 ## Configuração do Servidor Flask
 
@@ -28,7 +37,7 @@ Certifique-se de configurar corretamente o servidor Flask local antes de usar a 
 Para mudar o local onde os vídeos são baixados, navegue até o arquivo app.py e altere a linha abaixo para o diretório desejado:
 
 ```python
-'outtmpl': 'D:\\JP - User\\Videos\\Video Downloads\\%(title)s.%(ext)s'
+'outtmpl': 'downloads/%(title)s.%(ext)s'
 ```
 
 
@@ -55,6 +64,14 @@ This is a browser extension project that allows downloading YouTube videos in di
 
 - **Python**: Make sure Python is installed on your system.
 - **FFmpeg**: The project requires FFmpeg to merge video and audio formats. Ensure FFmpeg is installed and properly configured.
+- **Flask and Flask CORS**: To use the extension, it is necessary to install Flask and CORS:
+```
+pip install Flask
+```
+
+```
+pip install Flask-Cors
+```
 
 ## Flask Server Setup
 
@@ -65,7 +82,7 @@ Make sure to properly configure the local Flask server before using the extensio
 To change the location where the videos are downloaded, navigate to the app.py file and modify the line below to the desired directory:
 
 ```python
-'outtmpl': 'D:\\JP - User\\Videos\\Video Downloads\\%(title)s.%(ext)s'
+'outtmpl': 'downloads/%(title)s.%(ext)s'
 ```
 
 ## License
