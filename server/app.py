@@ -7,6 +7,14 @@ app = Flask(__name__)
 CORS(app)
 
 progress_percent = '0'
+content_length = 0
+
+# def get_length(d):
+#     global content_length
+#     if 'total_bytes' in d:
+#         content_length = d['total_bytes']
+#     elif 'total_bytes_estimate' in d:
+#         content_length = d['total_bytes_estimate']
 
 def get_progress(d):
     global progress_percent
@@ -19,12 +27,21 @@ def get_progress(d):
         progress_percent = str(p)
         print(d['filename'], d['_percent_str'], d['_eta_str'])
 
-@app.route('/progress')
+@app.route('/status', methods=['GET'])
+def server_status():
+    status = {'status': 'downloading'}
+    return jsonify(status)
+
+@app.route('/progress', methods=['GET'])
 def progress():
     global progress_percent
     if (progress_percent != '0.0'):
         return jsonify({'percent': progress_percent})
     
+# @app.route('/length', methods=['GET'])
+# def length():
+#     global content_length
+#     return {'progress': content_length}
     
 @app.route('/download', methods=['POST'])
 def download_video():
@@ -48,6 +65,7 @@ def download_video():
             'outtmpl': 'downloads/%(title)s.%(ext)s',
             'merge_output_format': 'mp4',
             'progress_hooks': [get_progress],
+            # 'progress_hooks': [get_progress, get_length],
             'ffmpeg_location': 'C:\\ffmpeg\\bin'
         }
         try:
