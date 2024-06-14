@@ -13,15 +13,14 @@ async function getProgress() {
         const data = await response.json();
 
         const rawPercent = data.percent;
-        debugger
-        const percent = rawPercent.replace(/\x1b\[[0-9;]*m/g, '').trim(); // [0;94m 6.6[0m%
+        const withoutPercent = rawPercent.replace(/\x1b\[[0-9;]*m/g, '').trim(); // [0;94m 6.6[0m%
+        console.log(withoutPercent);
+        const percent = withoutPercent.endsWith('%') ? withoutPercent: `${withoutPercent}%`;
 
-        // Formatar percentagem e exibir
-        document.getElementById('progress').innerText = percent;
+        document.getElementById('progress-bar').innerText = percent;
       } catch (error) {
         console.error('There has been a problem with your fetch operation:', error);
       }
     }
 
-    // Update progress every second
     setInterval(getProgress, 1000);
