@@ -1,7 +1,6 @@
-import os
+import os, yt_dlp, threading
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import yt_dlp
 
 app = Flask(__name__)
 CORS(app)
@@ -57,7 +56,6 @@ def download_video():
         }
         ydl_opts = {
             'format': resolution_map.get(resolution, 'best'),
-            # 'outtmpl': 'D:\\JP - User\\Videos\\Video Downloads\\%(title)s.%(ext)s',
             'outtmpl': 'downloads/%(title)s.%(ext)s',
             'merge_output_format': 'mp4',
             'progress_hooks': [get_progress],
