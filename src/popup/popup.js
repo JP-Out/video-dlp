@@ -1,3 +1,5 @@
+const downloaderStatus = document.getElementById('status');
+
 async function getProgress() {
   try {
     const response = await fetch('http://localhost:5000/progress', {
@@ -15,62 +17,79 @@ async function getProgress() {
     const data = await response.json();
 
     const rawPercent = data.percent;
-    const contentLength = data.content_length;
-
     const withoutPercent = rawPercent.replace(/\x1b\[[0-9;]*m/g, '').trim();
     const percent = withoutPercent.endsWith('%') ? withoutPercent : `${withoutPercent}%`;
 
-    const progressBar = document.getElementById('progress-bar');
+    const progressFill = document.getElementById('progress-fill');
     const progressPercent = document.getElementById('progress-percent');
 
     const percentValue = parseFloat(withoutPercent);
 
-    progressBar.style.width = percent;
+    progressFill.style.width = percent;
     progressPercent.innerText = percent;
-
-    const serverDonwloading = await serverIsDownloading();
 
     // Change background color based on percentage
     if (percentValue > 95) {
-      progressBar.style.backgroundColor = '#0065ff'; // Blue
+      progressFill.style.backgroundColor = '#0065ff'; // Blue
     } else if (percentValue > 75) {
-      progressBar.style.backgroundColor = '#4caf50'; // Green
+      progressFill.style.backgroundColor = '#4caf50'; // Green
     } else if (percentValue > 50) {
-      progressBar.style.backgroundColor = '#ffeb3b'; // Yellow
+      progressFill.style.backgroundColor = '#ffeb3b'; // Yellow
     } else if (percentValue > 25) {
-      progressBar.style.backgroundColor = '#ff9800'; // Orange
+      progressFill.style.backgroundColor = '#ff9800'; // Orange
     } else {
-      progressBar.style.backgroundColor = '#f44336'; // Red
+      progressFill.style.backgroundColor = '#f44336'; // Red
     }
 
-    console.log(`Percent: ${percent}, Content Length: ${contentLength}`);
+    let title = data.title;
+    if (title.length > 70) {
+      title = title.substring(0, 67).trimEnd() + '...';
+    }
+
+    downloaderStatus.innerHTML = `Downloading video: <span class="video-title">${title}</span>`;
+    console.log(`Percent: ${percent}`);
 
   } catch (error) {
-    
-    console.warn('There has been a problem with your fetch operation:', error);
-    document.getElementById('warn').innerText = 'Conection Error:\nMake sure you have started the server in app.py';
+    downloaderStatus.innerText = 'Connection Error: Make sure you have started the server in app.py';
+    downloaderStatus.style.color = '#f44336'; // Red
   }
 }
 
-// async function serverIsDownloading() {
-//   const response = await fetch('http://localhost:5000/status', {
-//     method: 'GET',
-//     mode: 'cors',
-//     headers: {
-//       'Content-Type': 'application/json'
-//     }
-//   });
-  
-//   const data = await response.json();
+async function getServerStatus() {
+  try {
+    const response = await fetch('http://localhost:5000/status', {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
 
-//   const serverStatus = data.status;
-//   return serverStatus === 'downloading';
-// }
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText);
+    }
 
-// const serverDownloading = serverIsDownloading();
+    const data = await response.json();
+    return data.status;
 
-// if (serverDownloading){
-//   setInterval(getProgress, 1000);
-// }
+  } catch (error) {
+    downloaderStatus.innerText = 'Connection Error: Make sure you have started the server in app.py';
+    downloaderStatus.style.color = '#f44336'; // Red
+    return null;
+  }
+}
 
-setInterval(getProgress, 1000);
+async function checkAndStartProgress() {
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  const serverStatus = await getServerStatus();
+
+  if (serverStatus === 'downloading') {
+    setInterval(getProgress, 1000);
+  } else if (serverStatus === 'idle') {
+    downloaderStatus.innerText = 'Server is running. Waiting for a link...';
+    downloaderStatus.style.color = '#ffffff'; // White
+  }
+}
+
+// Call the function to check the server status and start progress monitoring
+checkAndStartProgress();

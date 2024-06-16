@@ -8,43 +8,39 @@ CORS(app)
 
 progress_percent = '0'
 content_length = 0
-
-# def get_length(d):
-#     global content_length
-#     if 'total_bytes' in d:
-#         content_length = d['total_bytes']
-#     elif 'total_bytes_estimate' in d:
-#         content_length = d['total_bytes_estimate']
+server_state = 'idle'
 
 def get_progress(d):
-    global progress_percent
+    global progress_percent, server_state, video_title   
     if d['status'] == 'finished':
         file_tuple = os.path.split(os.path.abspath(d['filename']))
         print("Done downloading {}".format(file_tuple[1]))
+        server_state = 'idle'
     elif d['status'] == 'downloading':
         p = d['_percent_str']
         p = p.replace('%','')
         progress_percent = str(p)
+        video_title = d['info_dict']['title']
         print(d['filename'], d['_percent_str'], d['_eta_str'])
-
+        server_state = 'downloading'
+        
 @app.route('/status', methods=['GET'])
 def server_status():
-    status = {'status': 'downloading'}
+    global server_state
+    status = {'status': server_state}
     return jsonify(status)
 
 @app.route('/progress', methods=['GET'])
 def progress():
-    global progress_percent
+    global progress_percent, video_title
     if (progress_percent != '0.0'):
-        return jsonify({'percent': progress_percent})
-    
-# @app.route('/length', methods=['GET'])
-# def length():
-#     global content_length
-#     return {'progress': content_length}
+        return jsonify({'percent': progress_percent, 'title': video_title})
+    else:
+        return jsonify({'percent': '0', 'title': '[N/A]'})
     
 @app.route('/download', methods=['POST'])
 def download_video():
+    global server_state
     data = request.json
     url = data.get('url')
     resolution = data.get('resolution')
@@ -65,14 +61,15 @@ def download_video():
             'outtmpl': 'downloads/%(title)s.%(ext)s',
             'merge_output_format': 'mp4',
             'progress_hooks': [get_progress],
-            # 'progress_hooks': [get_progress, get_length],
             'ffmpeg_location': 'C:\\ffmpeg\\bin'
         }
         try:
+            server_state = 'downloading'
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
             return jsonify({'status': 'success', 'url': url, 'resolution': resolution})
         except Exception as e:
+            server_state = 'idle'
             return jsonify({'status': 'error', 'message': str(e)}), 500
     else:
         return jsonify({'status': 'error', 'message': 'No URL or resolution provided'}), 400

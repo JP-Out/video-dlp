@@ -9,11 +9,22 @@
 <body>
     <h1>Download Progress</h1>
     <div id="progress-container">
-        <div id="progress-bar"></div>
+        <div id="progress-bar">
+            <div id="progress-fill"></div>
+        </div>
         <div id="progress-percent">0%</div>
     </div>
+
+    <div id="status-container"> Status:
+        <div id="status">Connecting to the server...</div>
+    </div>
+
     <script src="popup.js"></script>
-    <div id="warn"></div>
 </body>
 
-</html> 
+</html>
+<!-- 
+1. Adicionar erro de url não suportado, e erro 404
+
+2. Adicionar notificação de video baixado
+-->
