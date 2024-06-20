@@ -1,94 +1,93 @@
-# Video Downloader Extension
+# Projeto de Download de Vídeos
 
-Este é um projeto de extensão do navegador que permite baixar vídeos do YouTube em diferentes resoluções.
+## O que o projeto faz
 
-## Funcionalidades
+Este projeto fornece uma aplicação web para download de vídeos de diferentes resoluções diretamente do YouTube. A interface de usuário permite monitorar o progresso do download em tempo real.
 
-- **Baixar Vídeos em Diferentes Resoluções**: A extensão permite baixar vídeos do YouTube em várias resoluções, incluindo 4K, 1440p, 1080p, 720p, 480p, 360p e 240p.
-- **Menu de Contexto**: A extensão adiciona um menu de contexto ao navegador, permitindo que o usuário clique com o botão direito do mouse na página do YouTube e selecione a opção "Baixar video na resolução..." para iniciar o processo de download.
-- **Comunicação com Servidor Flask**: A extensão se comunica com um servidor Flask local para iniciar o processo de download do vídeo selecionado.
+## Por que o projeto é útil
 
-## Como Usar
+Este projeto é útil para usuários que desejam baixar vídeos do YouTube em várias resoluções de maneira fácil e rápida. Ele oferece uma interface gráfica para monitorar o progresso do download, além de uma extensão de navegador que facilita o envio de links de vídeo diretamente para a aplicação.
 
-1. **Instalação**: Clone este repositório ou baixe o código-fonte da extensão.
-2. **Instalação da Extensão**: Abra o navegador Chrome e vá para a página de extensões. Ative o modo de desenvolvedor e carregue a extensão a partir do diretório do código-fonte.
-3. **Uso**: Navegue até um vídeo do YouTube, clique com o botão direito do mouse na página e selecione a opção "Baixar video na resolução...". Escolha a resolução desejada e o vídeo será baixado automaticamente.
+## Como os usuários podem começar a usar o projeto
 
-## Pré-requisitos
+Para começar a usar o projeto, siga os passos abaixo:
 
-- **Python**: Certifique-se de ter o Python instalado no seu sistema.
-- **FFmpeg**: O projeto requer o FFmpeg para mesclar os formatos de vídeo e áudio. Certifique-se de ter o FFmpeg instalado e configurado corretamente.
-- **Flask e Flask CORS**: Para usar a extensão e necessario instalar o Flask e o CORS:
-```
-pip install Flask
-```
+1. Clone este repositório para o seu ambiente local.
+2. Instale as dependências necessárias.
+3. Execute o servidor Python (`app.py`).
+4. Abra a interface de usuário (`popup.html`) em um navegador para monitorar o progresso do download.
+5. Utilize a extensão do navegador para enviar links de vídeo para o servidor.
 
-```
-pip install Flask-Cors
-```
+## Como instalar dependências do projeto
 
+### Python
 
-## Configuração do Servidor Flask
+1. Certifique-se de ter o Python 3.x instalado.
+2. Instale as seguintes dependências:
+    ```sh
+    pip install flask flask-cors yt-dlp
+    ```
+3. Certifique-se de ter o [yt-dlp](https://github.com/yt-dlp/yt-dlp) e o [ffmpeg](https://ffmpeg.org/) instalados e configurados no PATH.
 
-Certifique-se de configurar corretamente o servidor Flask local antes de usar a extensão. O código-fonte do servidor Flask pode ser encontrado no diretório `server`.
+### Extensão do Navegador
 
-## Mudando o Local de Download
+1. Abra o Google Chrome e vá para `chrome://extensions/`.
+2. Ative o "Modo do desenvolvedor" no canto superior direito.
+3. Clique em "Carregar sem compactação" e selecione a pasta `extension` dentro do projeto.
 
-Para mudar o local onde os vídeos são baixados, navegue até o arquivo app.py e altere a linha abaixo para o diretório desejado:
+## Referenciando ferramentas de projetos de outras pessoas
 
-```python
-'outtmpl': 'downloads/%(title)s.%(ext)s'
-```
+Este projeto utiliza as seguintes ferramentas de terceiros:
 
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp): Um fork do youtube-dl com melhorias.
+- [ffmpeg](https://ffmpeg.org/): Um framework completo para gravar, converter e fazer streaming de áudio e vídeo.
+- [Flask](https://flask.palletsprojects.com/): Um micro framework web para Python.
+- [Flask-CORS](https://flask-cors.readthedocs.io/): Uma extensão para Flask para lidar com Cross-Origin Resource Sharing (CORS).
 
+---
 
+# Video Download Project
 
+## What the project does
 
-# Video Downloader Extension
+This project provides a web application for downloading videos in various resolutions directly from YouTube. The user interface allows real-time monitoring of the download progress.
 
-This is a browser extension project that allows downloading YouTube videos in different resolutions.
+## Why the project is useful
 
-## Features
+This project is useful for users who want to download YouTube videos in various resolutions easily and quickly. It offers a graphical interface to monitor download progress, and a browser extension to facilitate sending video links directly to the application.
 
-- **Download Videos in Different Resolutions**: The extension allows downloading YouTube videos in various resolutions, including 4K, 1440p, 1080p, 720p, 480p, 360p, and 240p.
-- **Context Menu**: The extension adds a context menu to the browser, allowing the user to right-click on the YouTube page and select the option "*Baixar video na resolução...*" to initiate the download process.
-- **Flask Server Communication**: The extension communicates with a local Flask server to initiate the download process for the selected video.
+## How users can get started with the project
 
-## How to Use
+To get started with the project, follow these steps:
 
-1. **Installation**: Clone this repository or download the extension source code.
-2. **Extension Installation**: Open the Chrome browser and go to the extensions page. Enable developer mode and load the extension from the source code directory.
-3. **Usage**: Navigate to a YouTube video, right-click on the page, and select the option "*Baixar video na resolução...*" to download. Choose the desired resolution, and the video will be downloaded automatically.
+1. Clone this repository to your local environment.
+2. Install the necessary dependencies.
+3. Run the Python server (`app.py`).
+4. Open the user interface (`popup.html`) in a browser to monitor download progress.
+5. Use the browser extension to send video links to the server.
 
-## Prerequisites
+## How to install project dependencies
 
-- **Python**: Make sure Python is installed on your system.
-- **FFmpeg**: The project requires FFmpeg to merge video and audio formats. Ensure FFmpeg is installed and properly configured.
-- **Flask and Flask CORS**: To use the extension, it is necessary to install Flask and CORS:
-```
-pip install Flask
-```
+### Python
 
-```
-pip install Flask-Cors
-```
+1. Ensure you have Python 3.x installed.
+2. Install the dependencies listed in `requirements.txt`:
+    ```sh
+    pip install -r requirements.txt
+    ```
+3. Ensure you have [yt-dlp](https://github.com/yt-dlp/yt-dlp) and [ffmpeg](https://ffmpeg.org/) installed and configured in your PATH.
 
-## Flask Server Setup
+### Browser Extension
 
-Make sure to properly configure the local Flask server before using the extension. The Flask server source code can be found in the `server` directory.
+1. Open Google Chrome and go to `chrome://extensions/`.
+2. Enable "Developer mode" in the top right corner.
+3. Click on "Load unpacked" and select the `extension` folder within the project.
 
-## Changing the Download Location
+## Referencing tools from other projects
 
-To change the location where the videos are downloaded, navigate to the app.py file and modify the line below to the desired directory:
+This project uses the following third-party tools:
 
-```python
-'outtmpl': 'downloads/%(title)s.%(ext)s'
-```
-
-## License
-
-This project is licensed under the [Unlicense](LICENSE).
-
-## References
-
-This project uses [yt-dlp](https://github.com/yt-dlp/yt-dlp) to download videos.
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp): A fork of youtube-dl with enhancements.
+- [ffmpeg](https://ffmpeg.org/): A complete framework for recording, converting, and streaming audio and video.
+- [Flask](https://flask.palletsprojects.com/): A micro web framework for Python.
+- [Flask-CORS](https://flask-cors.readthedocs.io/): An extension for Flask to handle Cross-Origin Resource Sharing (CORS).
