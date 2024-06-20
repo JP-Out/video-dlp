@@ -73,7 +73,7 @@ To get started with the project, follow these steps:
 1. Ensure you have Python 3.x installed.
 2. Install the dependencies listed in `requirements.txt`:
     ```sh
-    pip install -r requirements.txt
+    pip install flask flask-cors yt-dlp
     ```
 3. Ensure you have [yt-dlp](https://github.com/yt-dlp/yt-dlp) and [ffmpeg](https://ffmpeg.org/) installed and configured in your PATH.
 
