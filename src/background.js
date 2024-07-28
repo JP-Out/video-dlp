@@ -5,7 +5,7 @@ chrome.runtime.onInstalled.addListener(() => {
         contexts: ["all"]
     });
 
-    const resolutions = ['2160p', '1080p', '720p', '480p', '360p', '240p', '144p'];
+    const resolutions = ['2160p', '1440p', '1080p', '720p', '480p', '360p', '240p', '144p'];
     resolutions.forEach(resolution => {
         chrome.contextMenus.create({
             id: `FinderVideoContextMenu-${resolution}`,
