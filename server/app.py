@@ -1,4 +1,4 @@
-import os, yt_dlp, threading
+import os, yt_dlp, threading, subprocess, sys
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
@@ -8,6 +8,34 @@ CORS(app)
 progress_percent = '0'
 content_length = 0
 server_state = 'idle'
+
+def clear_console():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def update_yt_dlp():
+    try:
+        clear_console()
+        print("Buscando por atualizações do yt-dlp...")
+        
+        # Detectar o comando pip apropriado
+        pip_command = 'pip'
+        if hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):
+            # Dentro de um ambiente virtual
+            pip_command = os.path.join(sys.prefix, 'bin', 'pip')
+        
+        # Adicionar suporte para múltiplas versões do Python
+        python_version = f"{sys.version_info.major}.{sys.version_info.minor}"
+        if os.name == 'posix' and not os.path.exists(pip_command):
+            pip_command = f'pip{python_version}'
+        elif os.name == 'nt':
+            pip_command = 'pip'
+        
+        subprocess.run([pip_command, "install", "--upgrade", "yt-dlp"], check=True)
+        print("Atualização do yt-dlp concluída com sucesso!")
+        clear_console()
+    except subprocess.CalledProcessError as e:
+        print(f"Erro ao atualizar yt-dlp: {e}")
+        raise
 
 def get_progress(d):
     global progress_percent, server_state, video_title   
@@ -56,7 +84,8 @@ def download_video():
         }
         ydl_opts = {
             'format': resolution_map.get(resolution, 'best'),
-            'outtmpl': 'downloads/%(title)s.%(ext)s',
+            # 'outtmpl': 'downloads/%(title)s.%(ext)s',
+            'outtmpl': 'D:/JP - User/Videos/Video Downloads/%(title)s.%(ext)s',
             'merge_output_format': 'mp4',
             'progress_hooks': [get_progress],
             'ffmpeg_location': 'C:\\ffmpeg\\bin'
@@ -73,4 +102,5 @@ def download_video():
         return jsonify({'status': 'error', 'message': 'No URL or resolution provided'}), 400
 
 if __name__ == '__main__':
+    update_yt_dlp()
     app.run(port=5000)
