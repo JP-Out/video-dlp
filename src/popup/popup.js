@@ -72,6 +72,7 @@ async function getProgress() {
       title = title.substring(0, 67).trimEnd() + '...';
     }
 
+    downloaderStatus.style.color = '#ffff'
     downloaderStatus.innerHTML = `Downloading video: <span class="video-title">${title}</span>`;
     console.log(`Percent: ${percent}`);
 
@@ -106,13 +107,12 @@ async function getServerStatus() {
 }
 
 async function checkAndStartProgress() {
-  await new Promise(resolve => setTimeout(resolve, 2000));
   const serverStatus = await getServerStatus();
 
   if (serverStatus === 'downloading') {
     enableProgressBar();
-    setInterval(getProgress, 1000);
-  } else if (serverStatus === 'idle') {
+    setInterval(getProgress, 700);
+   } else if (serverStatus === 'idle') {
     downloaderStatus.innerText = 'Server is running. Waiting for a link...';
     downloaderStatus.style.color = '#ffffff'; // White
   }
