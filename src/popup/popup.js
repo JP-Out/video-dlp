@@ -1,5 +1,30 @@
 const downloaderStatus = document.getElementById('status');
 
+function enableProgressBar() {
+  if (!document.getElementById('progress-bar')) {
+    // Create ProgressBar div
+    var elementProgressBar = document.createElement('div');
+    elementProgressBar.id = 'progress-bar';
+
+    // Create ProgressFill div
+    var elementProgressFill = document.createElement('div');
+    elementProgressFill.id = 'progress-fill';
+
+    // Add ProgressFill inside ProgressBar
+    elementProgressBar.appendChild(elementProgressFill);
+
+    // Add ProgressBar inside ProgressContainer
+    document.getElementById('progress-container').appendChild(elementProgressBar);
+
+    var elementProgressPercent = document.createElement('div');
+    elementProgressPercent.id = 'progress-percent';
+    elementProgressPercent.textContent = '0%';
+
+    // Add ProgressPercent inside ProgressContainer
+    document.getElementById('progress-container').appendChild(elementProgressPercent);
+  }
+}
+
 async function getProgress() {
   try {
     const response = await fetch('http://localhost:5000/progress', {
@@ -13,6 +38,7 @@ async function getProgress() {
     if (!response.ok) {
       throw new Error('Network response was not ok ' + response.statusText);
     }
+
 
     const data = await response.json();
 
@@ -84,6 +110,7 @@ async function checkAndStartProgress() {
   const serverStatus = await getServerStatus();
 
   if (serverStatus === 'downloading') {
+    enableProgressBar();
     setInterval(getProgress, 1000);
   } else if (serverStatus === 'idle') {
     downloaderStatus.innerText = 'Server is running. Waiting for a link...';
