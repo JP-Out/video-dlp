@@ -1,3 +1,53 @@
+async function fetchFromServer(endpoint) {
+    try {
+        const response = await fetch(`http://localhost:5000/${endpoint}`, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+
+        return await response.json();
+    } catch {
+        downloaderStatus.innerText = 'Connection Error: Make sure you have started the server in app.py';
+        downloaderStatus.style.color = '#f44336'; // Red
+        return null;
+    }
+}
+
+async function is_finish_download() {
+    const data = await fetchFromServer('status');
+    if (!data) return false;
+
+    return data.download_finished;
+}
+
+async function download_notify() {
+    const is_finished = await is_finish_download();
+
+    if (is_finished) {
+        chrome.action.setBadgeBackgroundColor({ color: '#FF0000' });
+        chrome.action.setBadgeText({ text: '1' });
+    }
+}
+
+// Function to periodically check the progress
+async function monitorDownloadProgress() {
+    const intervalId = setInterval(async () => {
+        const is_finished = await is_finish_download();
+
+        if (is_finished) {
+            await download_notify(); // Notifies that the download has completed
+            clearInterval(intervalId); // Stops checking after the download is finished
+        }
+    }, 1000);  // Checks the status every 1 second
+}
+
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: "FinderVideoContextMenu",
@@ -37,9 +87,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
                         },
                         body: JSON.stringify({ url: videoUrl, resolution: resolution })
                     })
-                    .then(response => response.json())
-                    .then(data => console.log('Success:', data))
-                    .catch((error) => console.error('Error:', error));
+                        .then(response => response.json())
+                        .then(data => console.log('Success:', data))
+                        .catch((error) => console.error('Error:', error));
                 }
 
                 sendLink(videoUrl, resolution);
@@ -50,6 +100,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
                 console.error(chrome.runtime.lastError.message);
             } else {
                 console.log("Script executado:", results);
+                monitorDownloadProgress();
             }
         });
     }

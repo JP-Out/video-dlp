@@ -86,7 +86,7 @@ async function getProgress() {
   console.log(`Percent: ${percent}`);
 }
 
-async function getServerStatus() { 
+async function getServerStatus() {
   const data = await fetchFromServer('status');
   if (!data) return;
   return data.status;
@@ -95,9 +95,11 @@ async function getServerStatus() {
 async function checkAndStartProgress() {
   const serverStatus = await getServerStatus();
 
+  // data.download_finished;
   if (serverStatus === 'downloading') {
     enableProgressBar();
-    setInterval(getProgress, 10);
+    setInterval(getProgress, 500);
+
   } else if (serverStatus === 'idle') {
     downloaderStatus.innerText = 'Server is running. Waiting for a link...';
     downloaderStatus.style.color = '#ffffff'; // White
