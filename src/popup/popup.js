@@ -25,9 +25,9 @@ function enableProgressBar() {
   }
 }
 
-async function getProgress() {
+async function fetchFromServer(endpoint) {
   try {
-    const response = await fetch('http://localhost:5000/progress', {
+    const response = await fetch(`http://localhost:5000/${endpoint}`, {
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -39,71 +39,57 @@ async function getProgress() {
       throw new Error('Network response was not ok ' + response.statusText);
     }
 
-
-    const data = await response.json();
-
-    const rawPercent = data.percent;
-    const withoutPercent = rawPercent.replace(/\x1b\[[0-9;]*m/g, '').trim();
-    const percent = withoutPercent.endsWith('%') ? withoutPercent : `${withoutPercent}%`;
-
-    const progressFill = document.getElementById('progress-fill');
-    const progressPercent = document.getElementById('progress-percent');
-
-    const percentValue = parseFloat(withoutPercent);
-
-    progressFill.style.width = percent;
-    progressPercent.innerText = percent;
-
-    // Change background color based on percentage
-    if (percentValue > 95) {
-      progressFill.style.backgroundColor = '#0065ff'; // Blue
-    } else if (percentValue > 75) {
-      progressFill.style.backgroundColor = '#4caf50'; // Green
-    } else if (percentValue > 50) {
-      progressFill.style.backgroundColor = '#ffeb3b'; // Yellow
-    } else if (percentValue > 25) {
-      progressFill.style.backgroundColor = '#ff9800'; // Orange
-    } else {
-      progressFill.style.backgroundColor = '#f44336'; // Red
-    }
-
-    let title = data.title;
-    if (title.length > 70) {
-      title = title.substring(0, 67).trimEnd() + '...';
-    }
-
-    downloaderStatus.style.color = '#ffff'
-    downloaderStatus.innerHTML = `Downloading video: <span class="video-title">${title}</span>`;
-    console.log(`Percent: ${percent}`);
-
-  } catch (error) {
-    downloaderStatus.innerText = 'Connection Error: Make sure you have started the server in app.py';
-    downloaderStatus.style.color = '#f44336'; // Red
-  }
-}
-
-async function getServerStatus() {
-  try {
-    const response = await fetch('http://localhost:5000/status', {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error('Network response was not ok ' + response.statusText);
-    }
-
-    const data = await response.json();
-    return data.status;
-
-  } catch (error) {
+    return await response.json();
+  } catch {
     downloaderStatus.innerText = 'Connection Error: Make sure you have started the server in app.py';
     downloaderStatus.style.color = '#f44336'; // Red
     return null;
   }
+}
+
+async function getProgress() {
+  const data = await fetchFromServer('progress');
+  if (!data) return;
+
+  const rawPercent = data.percent;
+  const withoutPercent = rawPercent.replace(/\x1b\[[0-9;]*m/g, '').trim();
+  const percent = withoutPercent.endsWith('%') ? withoutPercent : `${withoutPercent}%`;
+
+  const progressFill = document.getElementById('progress-fill');
+  const progressPercent = document.getElementById('progress-percent');
+
+  const percentValue = parseFloat(withoutPercent);
+
+  progressFill.style.width = percent;
+  progressPercent.innerText = percent;
+
+  // Change background color based on percentage
+  if (percentValue > 95) {
+    progressFill.style.backgroundColor = '#0065ff'; // Blue
+  } else if (percentValue > 75) {
+    progressFill.style.backgroundColor = '#4caf50'; // Green
+  } else if (percentValue > 50) {
+    progressFill.style.backgroundColor = '#ffeb3b'; // Yellow
+  } else if (percentValue > 25) {
+    progressFill.style.backgroundColor = '#ff9800'; // Orange
+  } else {
+    progressFill.style.backgroundColor = '#f44336'; // Red
+  }
+
+  let title = data.title;
+  if (title.length > 70) {
+    title = title.substring(0, 67).trimEnd() + '...';
+  }
+
+  downloaderStatus.style.color = '#ffff'
+  downloaderStatus.innerHTML = `Downloading video: <span class="video-title">${title}</span>`;
+  console.log(`Percent: ${percent}`);
+}
+
+async function getServerStatus() { 
+  const data = await fetchFromServer('status');
+  if (!data) return;
+  return data.status;
 }
 
 async function checkAndStartProgress() {
@@ -111,8 +97,8 @@ async function checkAndStartProgress() {
 
   if (serverStatus === 'downloading') {
     enableProgressBar();
-    setInterval(getProgress, 700);
-   } else if (serverStatus === 'idle') {
+    setInterval(getProgress, 10);
+  } else if (serverStatus === 'idle') {
     downloaderStatus.innerText = 'Server is running. Waiting for a link...';
     downloaderStatus.style.color = '#ffffff'; // White
   }

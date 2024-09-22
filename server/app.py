@@ -11,6 +11,7 @@ CORS(app)
 progress_percent = '0'
 content_length = 0
 server_state = 'idle'
+video_title = '[N/A]'
 
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
