@@ -13,9 +13,10 @@ async function fetchFromServer(endpoint) {
         }
 
         return await response.json();
-    } catch {
+    } catch (error) {
         downloaderStatus.innerText = 'Connection Error: Make sure you have started the server in app.py';
         downloaderStatus.style.color = '#f44336'; // Red
+        console.error('Fetch error:', error); // Error log
         return null;
     }
 }
@@ -27,13 +28,25 @@ async function is_finish_download() {
     return data.download_finished;
 }
 
-async function download_notify() {
-    const is_finished = await is_finish_download();
-
-    if (is_finished) {
+async function download_badge(downloadsCount){       
         chrome.action.setBadgeBackgroundColor({ color: '#FF0000' });
-        chrome.action.setBadgeText({ text: '1' });
-    }
+        chrome.action.setBadgeText({ text: downloadsCount.toString() });
+}
+
+async function getDownloadsCount() {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get(['downloadsCount'], function(result) {
+            resolve(result.downloadsCount || 0);  // Return 0 if don't have value
+        });
+    });
+}
+
+async function setDownloadsCount(count) {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.set({ 'downloadsCount': count }, function() {
+            resolve();
+        });
+    });
 }
 
 // Function to periodically check the progress
@@ -42,7 +55,10 @@ async function monitorDownloadProgress() {
         const is_finished = await is_finish_download();
 
         if (is_finished) {
-            await download_notify(); // Notifies that the download has completed
+            let downloadsCount = await getDownloadsCount();  // Retrieves the current value
+            downloadsCount += 1;
+            await setDownloadsCount(downloadsCount);  // Save the new value
+            await download_badge(downloadsCount); // Refresh the badge
             clearInterval(intervalId); // Stops checking after the download is finished
         }
     }, 1000);  // Checks the status every 1 second

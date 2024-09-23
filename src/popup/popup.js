@@ -1,5 +1,15 @@
 const downloaderStatus = document.getElementById('status');
 
+async function resetBadgeAndDownloadsCount() {
+  chrome.action.setBadgeText({ text: '' }); // Clear notifications
+  // Reset the counter
+  chrome.storage.local.set({ 'downloadsCount': 0 }, function () {
+    console.log('Contador de downloads redefinido para 0.');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', resetBadgeAndDownloadsCount); // Call the function, when popup it is opened
+
 function enableProgressBar() {
   if (!document.getElementById('progress-bar')) {
     // Create ProgressBar div
@@ -95,7 +105,6 @@ async function getServerStatus() {
 async function checkAndStartProgress() {
   const serverStatus = await getServerStatus();
 
-  // data.download_finished;
   if (serverStatus === 'downloading') {
     enableProgressBar();
     setInterval(getProgress, 500);
